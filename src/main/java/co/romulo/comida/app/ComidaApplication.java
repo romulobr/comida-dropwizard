@@ -2,6 +2,11 @@ package co.romulo.comida.app;
 
 import co.romulo.comida.auth.SimpleAuthenticator;
 import co.romulo.comida.auth.crypto.PasswordCryptographer;
+import co.romulo.comida.group.GroupDao;
+import co.romulo.comida.group.GroupStore;
+import co.romulo.comida.restaurant.RestaurantDao;
+import co.romulo.comida.restaurant.RestaurantResource;
+import co.romulo.comida.restaurant.RestaurantStore;
 import co.romulo.comida.user.User;
 import co.romulo.comida.user.UserDao;
 import co.romulo.comida.user.UserResource;
@@ -49,13 +54,21 @@ public class ComidaApplication extends Application<ComidaConfiguration> {
 
         final DBIFactory factory = new DBIFactory();
         final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
+
         final UserDao userDao = jdbi.onDemand(UserDao.class);
         final UserStore userStore = new UserStore(userDao, PasswordCryptographer.defaultPasswordCryptographer);
-        ;
 
         final UserResource userResource = new UserResource(userStore);
 
+        final GroupDao groupDao = jdbi.onDemand(GroupDao.class);
+        final GroupStore groupStore = new GroupStore(groupDao);
+
+        final RestaurantDao restaurantDao = jdbi.onDemand(RestaurantDao.class);
+        final RestaurantStore restaurantStore = new RestaurantStore(restaurantDao);
+        final RestaurantResource restaurantResource = new RestaurantResource(groupStore, restaurantStore);
+
         environment.jersey().register(userResource);
+        environment.jersey().register(restaurantResource);
 
         HealthCheck healthCheck = new SimpleHealthCheck();
         environment.healthChecks().register("web", healthCheck);

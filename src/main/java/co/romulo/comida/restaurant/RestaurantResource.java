@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 
 @Produces(MediaType.APPLICATION_JSON)
 @AllArgsConstructor
-@Path("/users")
+@Path("/restaurants")
 public class RestaurantResource {
     private GroupStore groupStore;
     private RestaurantStore restaurantStore;

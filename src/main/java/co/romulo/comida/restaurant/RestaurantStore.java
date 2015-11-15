@@ -1,7 +1,10 @@
 package co.romulo.comida.restaurant;
 
+import lombok.AllArgsConstructor;
+
 import java.util.List;
 
+@AllArgsConstructor
 public class RestaurantStore {
 
     RestaurantDao restaurantDao;
